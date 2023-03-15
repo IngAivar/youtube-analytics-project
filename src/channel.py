@@ -12,12 +12,35 @@ class Channel:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id: str = channel_id
         response = self.get_info()
+        youtube = Channel.get_service()
+        self.channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
         self.title: str = response['items'][0]['snippet']['title']
         self.description: str = response['items'][0]['snippet']['description']
         self.url: str = 'https://www.youtube.com/channel/' + channel_id
-        self.subscribers: int = response['items'][0]['statistics']['subscriberCount']
+        self.subscriber_count = int(self.channel["items"][0]["statistics"]["subscriberCount"])
         self.video_count: int = response['items'][0]['statistics']['videoCount']
         self.view_count: int = response['items'][0]['statistics']['viewCount']
+
+    def __str__(self):
+        return f"{self.title}, ({self.url})"
+
+    def __add__(self, redactsiya):
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count + redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
+
+    def __sub__(self, redactsiya):
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count - redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
+
+    def __ge__(self, redactsiya):
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count >= redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
