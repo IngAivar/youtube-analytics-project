@@ -36,9 +36,27 @@ class Channel:
         else:
             raise TypeError("ERROR")
 
-    def __ge__(self, redactsiya):
+    def __ge__(self, redactsiya):  # >=
         if isinstance(redactsiya, Channel):
             return self.subscriber_count >= redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
+
+    def __le__(self, redactsiya):  # <=
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count <= redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
+
+    def __gt__(self, redactsiya):  # >
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count > redactsiya.subscriber_count
+        else:
+            raise TypeError("ERROR")
+
+    def __lt__(self, redactsiya):  # <
+        if isinstance(redactsiya, Channel):
+            return self.subscriber_count < redactsiya.subscriber_count
         else:
             raise TypeError("ERROR")
 
