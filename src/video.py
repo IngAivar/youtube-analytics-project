@@ -1,20 +1,36 @@
 import os
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from src.channel import Channel
 
 api_key = os.getenv('API_KEY')
 
 
 class Video:
     def __init__(self, video_id: str) -> None:
-        response = self._get_info(video_id)
+        """
+        Инициализатор объекта класса на основе google api client с необходимыми атрибутами
+        """
+
         self.__video_id: str = video_id
-        self.__title: str = response['items'][0]['snippet']['title']
-        self.__url: str = 'https://youtu.be/' + video_id
-        self.__view_count: int = int(response['items'][0]['statistics']['viewCount'])
-        self.__like_count: int = int(response['items'][0]['statistics']['likeCount'])
+        try:
+            Channel.get_video(self.__video_id)['items'][0]
+        except IndexError:
+            self.video_id = None
+            self.title = None
+            self.url = None
+            self.view_count = None
+            self.like_count = None
+        else:
+            response = self._get_info(video_id)
+            self.video_id: str = video_id
+            self.title: str = response['items'][0]['snippet']['title']
+            self.url: str = 'https://youtu.be/' + video_id
+            self.view_count: int = int(response['items'][0]['statistics']['viewCount'])
+            self.like_count: int = int(response['items'][0]['statistics']['likeCount'])
 
     def __str__(self) -> str:
-        return f'{self.__title}'
+        return f'{self.title}'
 
     @staticmethod
     def get_service():

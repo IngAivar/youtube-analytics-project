@@ -98,3 +98,11 @@ class Channel:
     def channel_id(self, value):
         # self._channel_id = value
         print("AttributeError: property 'channel_id' of 'Channel' object has no setter")
+
+    @classmethod
+    def get_video(cls, id_video):
+        """
+        Возвращает информацию о видео
+        """
+        return cls.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                               id=id_video).execute()
